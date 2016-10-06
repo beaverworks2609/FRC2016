@@ -2,21 +2,19 @@
 package org.usfirst.frc.team2609.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team2609.robot.driveToEnc;
 
 public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
-	driveToEnc driveEnc = new driveToEnc();
 	int state;
 
 	public void robotInit() {
-		RobotMap.init();// put this here when imports don't work / robots don't
-						// quit
+		RobotMap.init();// put this here when imports don't work / robots don't quit
 		encReset();
 		stateReset();
 	}
@@ -89,25 +87,25 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void driveForward() {
-		driveEnc.drive(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), 2000,
+		driveToEnc.drive(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), 2000,
 				RobotMap.driveEncLeft.getRate(), RobotMap.driveEncRight.getRate());
-		if (driveEnc.onTarget(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), 2000)) {
+		if (driveToEnc.onTarget(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), 2000)) {
 			encReset();
 			state++;
 		}
 	}
 
 	public void driveBack() {
-		driveEnc.drive(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), -2000,
+		driveToEnc.drive(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), -2000,
 				RobotMap.driveEncLeft.getRate(), RobotMap.driveEncRight.getRate());
-		if (driveEnc.onTarget(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), -2000)) {
+		if (driveToEnc.onTarget(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), -2000)) {
 			encReset();
 			state++;
 		}
 	}
 
 	public void driveStop() {
-		driveEnc.motorStop();
+		driveToEnc.motorStop();
 		state++;
 	}
 

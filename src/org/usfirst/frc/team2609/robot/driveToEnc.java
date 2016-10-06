@@ -6,7 +6,7 @@ public class driveToEnc {
 
 	}
 
-	public void drive(double encLeft, double encRight, int target, double encRateLeft, double encRateRight) {
+	public static void drive(double encLeft, double encRight, int target, double encRateLeft, double encRateRight) {
 		double power = 0.4;
 		if (target < 0) {
 			power = -power;
@@ -25,7 +25,7 @@ public class driveToEnc {
 		}
 	}
 
-	public boolean onTarget(double encLeft, double encRight, int target) {
+	public static boolean onTarget(double encLeft, double encRight, int target) {
 		if (Math.abs(encLeft) < Math.abs(target) || Math.abs(encRight) < Math.abs(target)) {
 			return false;
 		} else {
@@ -34,7 +34,7 @@ public class driveToEnc {
 		}
 	}
 
-	public void motorStop() {
+	public static void motorStop() {
 		RobotMap.driveVictorRight1.set(0);
 		RobotMap.driveVictorRight2.set(0);
 		RobotMap.driveVictorLeft1.set(0);
