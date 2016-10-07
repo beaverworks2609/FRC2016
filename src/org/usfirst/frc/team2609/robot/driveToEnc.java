@@ -8,7 +8,7 @@ public class driveToEnc {
 
 	public static void drive(double encLeft, double encRight, int target, double encRateLeft, double encRateRight) {
 		double power = 0.4;
-		if (target < 0) {
+		if (target < (Math.abs(encRateLeft)+Math.abs(encRateRight))*0.5) {
 			power = -power;
 		}
 		double encError = Math.min(Math.abs(((encRateLeft) - (-encRateRight)) * 0.001), 0.2);

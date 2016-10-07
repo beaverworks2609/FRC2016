@@ -14,7 +14,7 @@ public class Robot extends IterativeRobot {
 	Command autonomousCommand;
 	int state = 0;
 	int targetTime = 0;
-	DriveState driveState = DriveState.WAIT;
+	DriveState driveState = DriveState.FORWARD;
 	Calendar calendar = Calendar.getInstance();
 	
 	public void robotInit() {
@@ -49,7 +49,7 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		encReset();
-
+		driveState = DriveState.FORWARD;
 	}
 	public enum DriveState{
 		FORWARD,BACK,STOP,WAIT,RESET
@@ -74,9 +74,6 @@ public class Robot extends IterativeRobot {
 			driveWait(2);
 			break;
 		}
-				
-
-		// 
 
 	}
 
@@ -93,16 +90,16 @@ public class Robot extends IterativeRobot {
 		driveToEnc.drive(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), 2000,
 				RobotMap.driveEncLeft.getRate(), RobotMap.driveEncRight.getRate());
 		if (driveToEnc.onTarget(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), 2000)) {
-			encReset();
+			//encReset();
 			driveState = DriveState.STOP;
 		}
 	}
 
 	public void driveBack() {
-		driveToEnc.drive(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), -2000,
+		driveToEnc.drive(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), 0,
 				RobotMap.driveEncLeft.getRate(), RobotMap.driveEncRight.getRate());
-		if (driveToEnc.onTarget(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), -2000)) {
-			encReset();
+		if (driveToEnc.onTarget(RobotMap.driveEncLeft.getDistance(), RobotMap.driveEncRight.getDistance(), 0)) {
+			//encReset();
 			driveState = DriveState.STOP;
 		}
 	}
