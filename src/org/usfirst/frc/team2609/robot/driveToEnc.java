@@ -7,22 +7,30 @@ public class driveToEnc {
 	}
 
 	public static void drive(double encLeft, double encRight, int target, double encRateLeft, double encRateRight) {
-		double power = 0.4;
-		if (target < (Math.abs(encRateLeft)+Math.abs(encRateRight))*0.5) {
-			power = -power;
+		double power = 0;
+		double maxPower = 0.6;
+		double encAvg = ((encLeft+encRight)*0.5);
+		double encRateAvg = ((Math.abs(encRateLeft)+Math.abs(encRateRight))*0.5);
+		if (target < encRateAvg) {
+			maxPower = -maxPower;
 		}
-		double encError = Math.min(Math.abs(((encRateLeft) - (-encRateRight)) * 0.001), 0.2);
+		double distError = target - encAvg;
+		power = Math.min(maxPower,distError*0.0001);
+		System.out.println("power" + power);
+		double encError = Math.min(Math.abs(((encRateLeft) - (encRateRight)) * 0.1), power*.5);
+		System.out.println("encError" + encError);
 		if (Math.abs(encRateRight) > Math.abs(encRateLeft)) {
-			RobotMap.driveVictorRight1.set(power - encError);
-			RobotMap.driveVictorRight2.set(power - encError);
-			RobotMap.driveVictorLeft1.set(-power);
-			RobotMap.driveVictorLeft2.set(-power);
+			RobotMap.driveVictorRight1.set(-power + encError);
+			RobotMap.driveVictorRight2.set(-power + encError);
+			RobotMap.driveVictorLeft1.set(power);
+			RobotMap.driveVictorLeft2.set(power);
 		} else {
-			RobotMap.driveVictorRight1.set(power);
-			RobotMap.driveVictorRight2.set(power);
-			RobotMap.driveVictorLeft1.set(-power - encError);
-			RobotMap.driveVictorLeft2.set(-power - encError);
+			RobotMap.driveVictorRight1.set(-power);
+			RobotMap.driveVictorRight2.set(-power);
+			RobotMap.driveVictorLeft1.set(power - encError);
+			RobotMap.driveVictorLeft2.set(power - encError);
 		}
+		
 	}
 
 	public static boolean onTarget(double encLeft, double encRight, int target) {

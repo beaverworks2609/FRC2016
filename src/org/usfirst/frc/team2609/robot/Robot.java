@@ -2,6 +2,7 @@
 package org.usfirst.frc.team2609.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -14,7 +15,8 @@ public class Robot extends IterativeRobot {
 	Command autonomousCommand;
 	int state = 0;
 	int targetTime = 0;
-	DriveState driveState = DriveState.FORWARD;
+	DriveState driveState = DriveState.TEST;
+	DriveState autoState = DriveState.TEST;
 	Calendar calendar = Calendar.getInstance();
 	
 	public void robotInit() {
@@ -34,31 +36,20 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousInit() {
-
+		encReset();
+		autoState = DriveState.FORWARD;
 		if (autonomousCommand != null)
 			autonomousCommand.start();
 	}
 
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-	}
-
-	public void teleopInit() {
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
-		encReset();
-		driveState = DriveState.FORWARD;
-	}
-	public enum DriveState{
-		FORWARD,BACK,STOP,WAIT,RESET
-	}
-	public void teleopPeriodic() {
-		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("driveEncLeft.getDistance()", RobotMap.driveEncLeft.getDistance());
 		SmartDashboard.putNumber("driveEncRight.getDistance()", RobotMap.driveEncRight.getDistance());
 		SmartDashboard.putNumber("driveEncLeft.getRate()", RobotMap.driveEncLeft.getRate());
 		SmartDashboard.putNumber("driveEncRight.getRate()", RobotMap.driveEncRight.getRate());
-		switch (driveState) {
+		System.out.println(driveState);
+		switch (autoState) {
 		case FORWARD:
 			driveForward();
 			break;
@@ -71,10 +62,77 @@ public class Robot extends IterativeRobot {
 		case WAIT:
 			driveWait(2);
 			break;
-		}
-
+		case TEST:
+			test();
+			break;
+		default:
+			driveStop();
+			break;
+			}
 	}
 
+	public void teleopInit() {
+		if (autonomousCommand != null)
+			autonomousCommand.cancel();
+		encReset();
+		driveState = DriveState.FORWARD;
+	}
+	public enum DriveState{
+		FORWARD,BACK,STOP,WAIT,RESET,TEST
+	}
+	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
+		Joystick driveStick = new Joystick(0);
+		double deadZone = 0.1;
+        double X = -driveStick.getRawAxis(0);
+        double Y = -driveStick.getRawAxis(1);
+        if (Math.abs(X)<deadZone){
+        	X = 0;
+        }
+        if (Math.abs(Y)<deadZone){
+        	Y = 0;
+        }
+        double leftOutput;
+        double rightOutput;
+        if (Y > 0) {
+            if (X > 0.0) {
+                leftOutput = Y - X;
+                rightOutput = Math.max(Y, X);
+            } else {
+                leftOutput = Math.max(Y, -X);
+                rightOutput = Y + X;
+            }
+        } else{
+            if (X > 0.0) {
+                leftOutput = -Math.max(-Y, X);
+                rightOutput = Y + X;
+            } else {
+                leftOutput = Y - X;
+                rightOutput = -Math.max(-Y, -X);
+            }
+            	
+
+        }
+
+        if (driveStick.getRawButton(1)){
+        	driveForward();
+        	
+        }
+        else{
+            RobotMap.driveVictorLeft1.set(leftOutput);
+            RobotMap.driveVictorLeft2.set(leftOutput);
+            RobotMap.driveVictorRight1.set(-rightOutput);
+            RobotMap.driveVictorRight2.set(-rightOutput);
+        }
+
+	}
+	public void test(){
+		//forward
+		RobotMap.driveVictorRight1.set(-0.7);
+		RobotMap.driveVictorRight2.set(-0.7);
+		RobotMap.driveVictorLeft1.set(0.7);
+		RobotMap.driveVictorLeft2.set(0.7);
+	}
 	public void testPeriodic() {
 		LiveWindow.run();
 	}
