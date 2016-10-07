@@ -29,10 +29,8 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 
-		// SmartDashboard.putNumber("driveEnc1.getDistance()",
-		// RobotMap.driveEncLeft.getDistance());
-		// SmartDashboard.putNumber("driveEnc2.getDistance()",
-		// RobotMap.driveEncRight.getDistance());
+		SmartDashboard.putNumber("driveEncLeft.getDistance()", RobotMap.driveEncLeft.getDistance());
+		SmartDashboard.putNumber("driveEncRight.getDistance()", RobotMap.driveEncRight.getDistance());
 	}
 
 	public void autonomousInit() {

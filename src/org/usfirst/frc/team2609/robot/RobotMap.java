@@ -23,7 +23,6 @@ public class RobotMap {
 		driveVictorRight2 = new Victor(3);
 		driveEncLeft = new Encoder(0, 2);
 		driveEncRight = new Encoder(1, 3);
-		driveEncRight.setReverseDirection(true);
 		driveEncLeft.setDistancePerPulse(1);
 		driveEncRight.setDistancePerPulse(1.4);
 	}
