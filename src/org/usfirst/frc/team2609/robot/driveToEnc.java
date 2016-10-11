@@ -15,7 +15,7 @@ public class driveToEnc {
 			maxPower = -maxPower;
 		}
 		double distError = target - encAvg;
-		power = Math.min(maxPower,distError*0.0001);
+		power = Math.min(maxPower,distError*0.0005);
 		System.out.println("power" + power);
 		double encError = Math.min(Math.abs(((encRateLeft) - (encRateRight)) * 0.1), power*.5);
 		System.out.println("encError" + encError);
